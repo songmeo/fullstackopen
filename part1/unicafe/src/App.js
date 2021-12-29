@@ -1,25 +1,67 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
 
-function App() {
+const Header = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <h1>{props.name}</h1>
+  )
 }
 
-export default App;
+const StatisticLine = (props) => {
+  return(
+    <tr>
+      <td>{props.name}</td>
+      <td>{props.value}</td>
+    </tr>
+  )
+}
+
+// a proper place to define a component
+const Statistics = (props) => {
+  return(
+    <table>
+      <tbody>
+        <StatisticLine name="good" value={props.clicks.good} />
+        <StatisticLine name="neutral" value={props.clicks.neutral} />
+        <StatisticLine name="bad" value={props.clicks.bad} />
+      </tbody>
+    </table>  
+  )
+}
+
+const App = () => {
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const clicks = {
+    good: good,
+    bad: bad,
+    neutral: neutral
+  }
+
+  const handleGoodClick = () => {
+    setGood(good + 1)
+  }
+
+  const handleNeutralClick = () => {
+    setNeutral(neutral + 1)
+  }
+
+  const handleBadClick = () => {
+    setBad(bad + 1)
+  }
+
+  return (
+    <div>
+      <Header name="give feedback" />
+      <button onClick={handleGoodClick}>good</button>
+      <button onClick={handleNeutralClick}>neutral</button>
+      <button onClick={handleBadClick}>bad</button>
+
+      <Header name="statistics" />
+      <Statistics clicks={clicks} />
+    </div>
+  )
+}
+
+export default App
