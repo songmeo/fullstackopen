@@ -17,12 +17,22 @@ const StatisticLine = (props) => {
 
 // a proper place to define a component
 const Statistics = (props) => {
+  const good = props.clicks.good
+  const bad = props.clicks.bad
+  const neutral = props.clicks.neutral
+  const sum = good + bad + neutral
+  const average = sum / 3
+  const positive = (good / sum * 100) + " %"
+
   return(
     <table>
       <tbody>
-        <StatisticLine name="good" value={props.clicks.good} />
-        <StatisticLine name="neutral" value={props.clicks.neutral} />
-        <StatisticLine name="bad" value={props.clicks.bad} />
+        <StatisticLine name="good" value={good} />
+        <StatisticLine name="neutral" value={neutral} />
+        <StatisticLine name="bad" value={bad} />
+        <StatisticLine name="all" value={sum} />
+        <StatisticLine name="average" value={average} />
+        <StatisticLine name="positive" value={positive} />
       </tbody>
     </table>  
   )
