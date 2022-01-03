@@ -11,8 +11,14 @@ const App = () => {
     const person = {
       name: newName
     }
-    setPersons(persons.concat(person))
-    setNewName('')
+    const exists = persons.filter(person => person.name === newName)
+    if (exists.length) {
+      alert(`${person.name} is already in phonebook`)
+    }
+    else {
+      setPersons(persons.concat(person))
+      setNewName('')
+    }
   }
 
   const handleInputChange = (event) => {
@@ -32,7 +38,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-        {persons.map(person => <ul>{person.name}</ul>)}
+        {persons.map(person => <ul key={person.name}>{person.name}</ul>)}
     </div>
   )
 }
