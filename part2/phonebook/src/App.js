@@ -40,7 +40,7 @@ const App = () => {
 
   const handleFilter = (event) => {
     setNewFilterValue(event.target.value)
-    setPersonsToShow(persons.filter(person => person.name.toLowerCase().startsWith(filterValue.toLowerCase())))
+    setPersonsToShow(persons.filter(person => person.name.toLowerCase().startsWith(event.target.value.toLowerCase())))
   }
   
   return (
