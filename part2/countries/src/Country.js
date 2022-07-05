@@ -11,18 +11,8 @@ const Country = (props) => {
             setCountryToShow(response.data)
         })
     }
-    
-    if (countriesLength > 10) {
-        return (
-            <p>Too many matches, specify another filter</p>
-        )
-    }
-    else if (countriesLength === 1 && countryToShow.length === 0) {
-        const countryToShowName = props.countriesToShow[0].name.common
-        return getCountryDetails(countryToShowName)
-    }
-    else if (countriesLength === 1 && countryToShow.length === 1) {
-        const country = countryToShow[0]
+    const showCountryDetail = (country) => {
+        console.log(country)
         return (
             <div>
                 <h1>{country.name.common}</h1>
@@ -35,6 +25,20 @@ const Country = (props) => {
             </div>
         )
     }
+    
+    if (countriesLength > 10) {
+        return (
+            <p>Too many matches, specify another filter</p>
+        )
+    }
+    else if (countriesLength === 1 && countryToShow.length === 0) {
+        const countryToShowName = props.countriesToShow[0].name.common
+        return getCountryDetails(countryToShowName)
+    }
+    else if (countriesLength === 1 && countryToShow.length === 1) {
+        const country = countryToShow[0]
+        return showCountryDetail(country)
+    }
     else if (countryToShow.length === 1) {
         setCountryToShow([])
     }
@@ -44,20 +48,8 @@ const Country = (props) => {
                 { props.countriesToShow.map(country => {
                     return (
                         <ul key={country.name.common}>
-                            {country.name.common}<button onClick={() => getCountryDetails(country.name.common)}>show</button>
-                            {countryToShow.map(country => {
-                                return (
-                                    <div>
-                                        <h1>{country.name.common}</h1>
-                                        <p>capital {country.capital[0]}</p>
-                                        <p>area {country.area}</p>
-                                        <h2>languages</h2>
-                                        {Object.entries(country.languages).map(([key, value]) => (
-                                            <ul key={key}>{value}</ul>
-                                        ))}
-                                    </div>
-                                );
-                            })}
+                            {country.name.common}
+                            <button onClick={() => showCountryDetail(country)}>show</button>
                         </ul>
                     );
                 })}
