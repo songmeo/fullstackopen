@@ -6,6 +6,7 @@ const Country = (props) => {
     const [countryToShow, setCountryToShow] = useState([])
     const [weather, setWeather] = useState([])
     const api_key = process.env.REACT_APP_API_KEY
+    //const api_key = 'f3d0c03bccd439d8bd15c8117fea5799'
     const getCountryDetail = (countryToShowName) => {
         axios
         .get(`https://restcountries.com/v3.1/name/${countryToShowName}`)
@@ -16,22 +17,28 @@ const Country = (props) => {
 
     const getWeather = (country) => {
         axios
-        .get(`https://api.openweathermap.org/data/3.0/onecall?lat=${country.latlng[0]}&lon=${country.latlng[1]}&exclude=minutely,hourly,daily,alerts&appid=${api_key}`)
+        .get(`https://api.openweathermap.org/data/2.5/weather?lat=${country.latlng[0]}&lon=${country.latlng[1]}&appid=${api_key}`)
         .then(response => {
-            console.log(response)
             setWeather(response.data)
+            console.log(weather)
         })
     }
 
     const CountryWeather = (props) => {
         const country = props.country
         getWeather(country)
+        if (weather.length !== 0) {
+            return(
+                <div>
+                    <h1>Weather in {weather.name}</h1>
+                    <p>temperature {weather.main.temp}</p>
+                    <p>wind {weather.wind.speed} m/s</p>
+                    <img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="weather icon"></img>
+                </div>
+            )    
+        }
         return(
-            <div>
-                <h1>Weather in {country.capital[0]}</h1>
-                <p>temperature {weather.current.temp} Celcius</p>
-                <p>wind {weather.current.wind_speed} m/s</p>
-            </div>
+            <div>Loading weather...</div>
         )
     }
 
@@ -46,7 +53,6 @@ const Country = (props) => {
                 {Object.entries(country.languages).map(([key, value]) => (
                     <ul key={key}>{value}</ul>
                 ))}
-                <CountryWeather country={country} />
             </div>
         )
     }
@@ -72,7 +78,12 @@ const Country = (props) => {
     }
     else if (countriesLength === 1 && countryToShow.length === 1) {
         const country = countryToShow[0]
-        return <CountryDetail country={country} />
+        return (
+            <div>
+                <CountryDetail country={country} />
+                <CountryWeather country={country} />
+            </div>
+        )
     }
     else if (countryToShow.length === 1) {
         setCountryToShow([])
