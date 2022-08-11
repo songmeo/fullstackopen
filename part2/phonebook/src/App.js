@@ -24,7 +24,6 @@ const App = () => {
   }, [persons, filterValue])
   
   const addPerson = (event) => {
-    console.log(event)
     event.preventDefault()
     const person = {
       name: newName,
@@ -32,7 +31,18 @@ const App = () => {
     }
     const exists = persons.filter(person => person.name === newName)
     if (exists.length) {
-      alert(`${person.name} is already in phonebook`)
+      if(window.confirm(`${person.name} is already in phonebook. Do you want to update their number?`))
+      {
+        personService
+        .update(exists[0].id, person)
+        .then(
+          personService
+          .getAll()
+          .then(initialPersons => {
+            setPersons(initialPersons)
+          })    
+        )
+      }
     }
     else {
       personService
@@ -52,7 +62,7 @@ const App = () => {
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
-  
+
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
   }
