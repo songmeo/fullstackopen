@@ -24,6 +24,7 @@ const App = () => {
   }, [persons, filterValue])
   
   const addPerson = (event) => {
+    console.log(event)
     event.preventDefault()
     const person = {
       name: newName,
@@ -40,6 +41,12 @@ const App = () => {
           setPersons(persons.concat(response.data))
         })
     }
+  }
+
+  const deletePerson = (personID) => {
+    personService
+      .deleteOne(personID)
+      .then(setPersons(persons.filter(p => p.id !== personID)))
   }
 
   const handleNameChange = (event) => {
@@ -61,7 +68,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm handleNumberChange={handleNumberChange} handleNameChange={handleNameChange} addPerson={addPerson} />
       <h2>Numbers</h2>
-      <Person personsToShow={personsToShow} />
+      <Person personsToShow={personsToShow} deletePerson={deletePerson} />
     </div>
   )
 }
