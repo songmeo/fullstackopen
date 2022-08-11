@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Person from './Person'
 import Filter from './Filter'
 import PersonForm from './PersonForm'
+import personService from './services/persons' 
 
 const App = () => {
   const [newName, setNewName] = useState('')
@@ -12,11 +12,11 @@ const App = () => {
   const [personsToShow, setPersonsToShow] = useState(persons)
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-    })
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
   }, [])
 
   useEffect(() => {
@@ -34,13 +34,11 @@ const App = () => {
       alert(`${person.name} is already in phonebook`)
     }
     else {
-      axios
-      .post('http://localhost:3001/persons', person)
-      .then(response => {
-        setPersons(persons.concat(response.data))
-        setNewName('')
-        setNewNumber('')
-      })
+      personService
+        .create(person)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+        })
     }
   }
   
