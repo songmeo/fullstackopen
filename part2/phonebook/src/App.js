@@ -4,7 +4,6 @@ import Filter from './Filter'
 import PersonForm from './PersonForm'
 import personService from './services/persons'
 import Notification from './Notification'
-import './index.css'
 
 const App = () => {
   const [newName, setNewName] = useState('')
@@ -13,6 +12,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [personsToShow, setPersonsToShow] = useState(persons)
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [isError, setError] = useState(false)
 
   useEffect(() => {
     personService
@@ -47,7 +47,7 @@ const App = () => {
           setNotificationMessage(`${person.name} number is updated.`),
           setTimeout(() => {
             setNotificationMessage(null)
-          }, 5000),
+          }, 5000)
         )
       }
     }
@@ -70,6 +70,14 @@ const App = () => {
     personService
       .deleteOne(personID)
       .then(setPersons(persons.filter(p => p.id !== personID)))
+      .catch(error => {
+        setError(true)
+        setNotificationMessage(error.message)
+        setTimeout(() => {
+          setNotificationMessage(null)
+          setError(false)
+        }, 5000)
+      })
   }
 
   const handleNameChange = (event) => {
@@ -87,7 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} isError={isError} />
       <Filter filterValue={filterValue} handleFilter={handleFilter} persons={persons} />
       <h2>Add a new</h2>
       <PersonForm handleNumberChange={handleNumberChange} handleNameChange={handleNameChange} addPerson={addPerson} />
