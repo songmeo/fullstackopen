@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const PORT = 3001
+
 app.use(express.json())
 
 let persons = [
@@ -35,6 +36,11 @@ const generateId = () => {
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
+})
+
+app.get('/info', (request, response) => {
+  text = `Phonebook has info for ${persons.length} people <br/><br/>${new Date()}`
+  response.status(200).send(text)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
