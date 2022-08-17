@@ -47,7 +47,12 @@ app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   person = persons.filter(p => p.id == Number(id))
 
-  response.json(person)
+  if(person.length == 1) {
+    response.json(person)
+  }
+  else {
+    response.status(404).send(`no person with id ${id} found`)
+  }
 })
 
 app.delete('/api/persons/:id', (request, response) => {
