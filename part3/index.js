@@ -43,6 +43,13 @@ app.get('/info', (request, response) => {
   response.status(200).send(text)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  person = persons.filter(p => p.id == Number(id))
+
+  response.json(person)
+})
+
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   persons = persons.filter(p => p.id !== Number(id))
