@@ -76,6 +76,15 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
+  new_person_name = body.name
+  name_exists = persons.filter(p => p.name == new_person_name)
+
+  if (name_exists) {
+    return response.status(400).json({ 
+      error: 'name exists'
+    })
+  }
+
   const person = {
     id: generateId(),
     name: body.name,
