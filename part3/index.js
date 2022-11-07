@@ -5,6 +5,7 @@ const app = express()
 const PORT = process.env.PORT || 8080
 app.use(express.json())
 app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('data', function (req, res) {
   if (req.body) {
