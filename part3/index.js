@@ -4,10 +4,19 @@ const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 8080
 const Person = require('./models/person')
-app.use(express.static('build'))
+
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path:  ', request.path)
+  console.log('Body:  ', request.body)
+  console.log('---')
+  next()
+}
+
 app.use(express.json())
 app.use(requestLogger)
 app.use(cors())
+app.use(express.static('build'))
 
 morgan.token('data', function (req, res) {
   if (req.body) {
@@ -111,6 +120,22 @@ app.post('/api/persons', (request, response) => {
     response.json(savedPerson)
   })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
