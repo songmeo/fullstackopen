@@ -63,7 +63,10 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-  text = `Phonebook has info for ${persons.length} people <br/><br/>${new Date()}`
+  Person.find({}).then(persons => {
+    persons_length = persons.length
+  })
+  text = `Phonebook has info for ${persons_length} people <br/><br/>${new Date()}`
   response.status(200).send(text)
 })
 
