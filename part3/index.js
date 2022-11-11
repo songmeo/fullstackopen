@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 8080
+const Person = require('./models/person')
 app.use(express.json())
 app.use(cors())
 app.use(express.static('build'))
@@ -46,7 +47,9 @@ const generateId = () => {
 }
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 app.get('/info', (request, response) => {
