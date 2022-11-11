@@ -4,9 +4,10 @@ const cors = require('cors')
 const app = express()
 const PORT = process.env.PORT || 8080
 const Person = require('./models/person')
-app.use(express.json())
-app.use(cors())
 app.use(express.static('build'))
+app.use(express.json())
+app.use(requestLogger)
+app.use(cors())
 
 morgan.token('data', function (req, res) {
   if (req.body) {
@@ -57,23 +58,24 @@ app.get('/info', (request, response) => {
   response.status(200).send(text)
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  person = persons.filter(p => p.id == Number(id))
-
-  if(person.length == 1) {
-    response.json(person)
-  }
-  else {
-    response.status(404).send(`no person with id ${id} found`)
-  }
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter(p => p.id !== Number(id))
-
-  response.status(204).end()
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+  .then(result => {
+    response.status(204).end()
+  })
+  .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
