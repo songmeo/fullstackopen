@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -18,7 +19,7 @@ app.use(requestLogger)
 app.use(cors())
 app.use(express.static('build'))
 
-morgan.token('data', function (req, res) {
+morgan.token('data', function (req) {
   if (req.body) {
     return JSON.stringify(req.body)
   }
@@ -28,24 +29,24 @@ app.use(morgan(':method :url :response-time :data'))
 
 let persons = [
   {
-    "name": "Arto Hellas",
-    "number": "040-123456",
-    "id": 1
+    'name': 'Arto Hellas',
+    'number': '040-123456',
+    'id': 1
   },
   {
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523",
-    "id": 2
+    'name': 'Ada Lovelace',
+    'number': '39-44-5323523',
+    'id': 2
   },
   {
-    "name": "Dan Abramov",
-    "number": "12-43-234345",
-    "id": 3
+    'name': 'Dan Abramov',
+    'number': '12-43-234345',
+    'id': 3
   },
   {
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122",
-    "id": 4
+    'name': 'Mary Poppendieck',
+    'number': '39-23-6423122',
+    'id': 4
   }
 ]
 
@@ -63,10 +64,11 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
+  var persons_length = 0
   Person.find({}).then(persons => {
     persons_length = persons.length
   })
-  text = `Phonebook has info for ${persons_length} people <br/><br/>${new Date()}`
+  const text = `Phonebook has info for ${persons_length} people <br/><br/>${new Date()}`
   response.status(200).send(text)
 })
 
@@ -84,22 +86,22 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-  .then(result => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(
+      response.status(204).end()
+    )
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if (!body.name) {
-    return response.status(400).json({ 
+    return response.status(400).json({
       error: 'name missing'
     })
   }
   else if (!body.number) {
-    return response.status(400).json({ 
+    return response.status(400).json({
       error: 'number missing'
     })
   }
@@ -113,7 +115,7 @@ app.post('/api/persons', (request, response, next) => {
   person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
