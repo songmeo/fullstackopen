@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -12,7 +12,8 @@
     "mongoose": "^6.7.2"
   },
   "devDependencies": {
-    "jest": "^29.3.1"
+    "jest": "^29.3.1",
+    "supertest": "^6.3.1"
   },
   "jest": {
     "testEnvironment": "node"
