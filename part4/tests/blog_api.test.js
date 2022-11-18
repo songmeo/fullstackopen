@@ -55,3 +55,23 @@ test('post request works', async () => {
 
   expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
 }, 100000)
+
+test('likes property will be 0 if not exist in request', async () => {
+  const newBlog = {
+    title: 'test',
+    author: 'test',
+    url: 'test'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+
+  const response = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  console.log(response.body[helper.initialBlogs.length])
+  expect(response.body[helper.initialBlogs.length].likes).toEqual(0)
+}, 100000)
