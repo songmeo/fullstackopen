@@ -72,6 +72,29 @@ test('likes property will be 0 if not exist in request', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
-  console.log(response.body[helper.initialBlogs.length])
   expect(response.body[helper.initialBlogs.length].likes).toEqual(0)
+}, 100000)
+
+test('returns 400 if title or author not exist', async () => {
+  const newBlog = {
+    url: 'test'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+}, 100000)
+
+test('likes property will be 0 if not exist in request', async () => {
+  const newBlog = {
+    url: 'test'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
 }, 100000)
