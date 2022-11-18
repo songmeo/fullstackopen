@@ -95,12 +95,11 @@ test('likes property will be 0 if not exist in request', async () => {
 
 }, 100000)
 
-describe('deletion of a note', () => {
+describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
-    console.log(blogsAtStart)
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
@@ -115,6 +114,27 @@ describe('deletion of a note', () => {
 
     expect(blogs).not.toContain(blogToDelete.title)
   })
+})
+
+describe('update of a blog', () => {
+  test('succeeds with updating a blog likes', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[1]
+
+    const updatedBlog = {
+      title: "Go To Statement Considered Harmful",
+      author: "Edsger W. Dijkstra",
+      url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+      likes: 10
+    }
+
+    response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+
+    expect(response.body.likes).toEqual(updatedBlog.likes)
+  }, 100000)
 })
 
 afterAll(() => {
