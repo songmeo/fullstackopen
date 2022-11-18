@@ -1,7 +1,7 @@
 const dummy = (blogs) => {
     return 1
   }
-  
+
 const totalLikes = (blog_lists) => {
   const reducer = (a, b) => {
     return {likes: a.likes + b.likes}
