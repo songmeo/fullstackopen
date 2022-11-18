@@ -32,10 +32,6 @@ test('unique identifier is named id', async () => {
   expect(response.body[0].id).toBeDefined();
 });
 
-afterAll(() => {
-  mongoose.connection.close()
-})
-
 test('post request works', async () => {
   const newBlog = {
     title: 'test',
@@ -98,3 +94,29 @@ test('likes property will be 0 if not exist in request', async () => {
     .expect(400)
 
 }, 100000)
+
+describe('deletion of a note', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    console.log(blogsAtStart)
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .expect(204)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(
+      helper.initialBlogs.length - 1
+    )
+
+    const blogs = blogsAtEnd.map(r => r.title)
+
+    expect(blogs).not.toContain(blogToDelete.title)
+  })
+})
+
+afterAll(() => {
+  mongoose.connection.close()
+})
